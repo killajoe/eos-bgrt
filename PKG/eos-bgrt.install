@@ -1,0 +1,60 @@
+post_install() {
+    echo "Enabling Plymouth service…"
+    systemctl enable plymouth-wait-for-animation.service
+
+    echo "Setting Plymouth theme…"
+    plymouth-set-default-theme eos-bgrt
+
+    echo "Updating kernel cmdline…"
+    if [ -f /etc/kernel/cmdline ]; then
+        grep -qw "plymouth.nolog" /etc/kernel/cmdline || \
+            sed -i 's/$/ splash quiet plymouth.nolog/' /etc/kernel/cmdline
+    else
+        echo "splash quiet plymouth.nolog" > /etc/kernel/cmdline
+    fi
+
+    rebuild_initramfs
+}
+
+post_remove() {
+    echo "Removing Plymouth dracut config…"
+    rm -f /etc/dracut.conf.d/plymouth.conf
+
+    echo "Cleaning kernel cmdline…"
+    if [ -f /etc/kernel/cmdline ]; then
+        sed -i \
+          -e 's/\bsplash\b//g' \
+          -e 's/\bquiet\b//g' \
+          -e 's/\bplymouth\.nolog\b//g' \
+          -e 's/  */ /g' \
+          -e 's/^ *//' \
+          -e 's/ *$//' \
+          /etc/kernel/cmdline
+    fi
+
+    echo "Restoring default Plymouth theme…"
+    plymouth-set-default-theme bgrt
+
+    rebuild_initramfs
+}
+
+rebuild_initramfs() {
+    echo "Rebuilding initramfs…"
+
+    if command -v reinstall-kernels >/dev/null 2>&1; then
+        reinstall-kernels
+        return
+    fi
+
+    if command -v dracut >/dev/null 2>&1; then
+        dracut --regenerate-all --force
+        return
+    fi
+
+    if command -v mkinitcpio >/dev/null 2>&1; then
+        mkinitcpio -P
+        return
+    fi
+
+    echo "WARNING: No initramfs generator found!" >&2
+}
