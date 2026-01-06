@@ -4,7 +4,7 @@ pkgname=eos-bgrt
 pkgver=1
 pkgrel=1
 arch=("any")
-url="https://github.com/killajoe/eos-bgrt
+url="https://github.com/killajoe/eos-bgrt"
 license=("GPL")
 pkgdesc="EndeavourOS BGRT Plymouth bootscreen animation"
 depends=("plymouth")
@@ -16,5 +16,5 @@ sha256sums=("234")
 package() {
   install -d "$pkgdir/usr/share/plymouth/themes"
   cp -rf "${srcdir}/${pkgname}/eos-bgrt" "${pkgdir}/usr/share/plymouth/themes/eos-bgrt"
-  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

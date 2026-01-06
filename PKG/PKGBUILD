@@ -16,5 +16,5 @@ sha256sums=('SKIP')
 package() {
   install -d "$pkgdir/usr/share/plymouth/themes"
   cp -rf "${srcdir}/${pkgname}/eos-bgrt" "${pkgdir}/usr/share/plymouth/themes/eos-bgrt"
-  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
