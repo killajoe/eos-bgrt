@@ -22,7 +22,7 @@ enable the service: `sudo systemctl enable plymouth-wait-for-animation.service`
 3. get the theme:
 `git clone https://github.com/killajoe/eos-bgrt.git`
 copy it in place:
-`sudo cp -a eos-bgrt /usr/share/plymouth/themes/`
+`sudo cp -a eos-bgrt/eos-bgrt /usr/share/plymouth/themes/`
 4. use KDE settings (Plymouth) to set the theme. Or alternative use commandline: `sudo plymouth-set-default-theme eos-bgrt`
 5. add dropin for dracut to add it to the initram image:
 `sudo nano /etc/dracut.conf.d/plymouth.conf`  and add this:
