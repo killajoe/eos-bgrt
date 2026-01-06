@@ -3,18 +3,26 @@
 pkgname=eos-bgrt
 pkgver=1
 pkgrel=1
+pkgdesc="EndeavourOS BGRT Plymouth bootscreen animation"
 arch=("any")
 url="https://github.com/killajoe/eos-bgrt"
 license=("GPL")
-pkgdesc="EndeavourOS BGRT Plymouth bootscreen animation"
 depends=("plymouth")
-makedepends=('git')
-optdepends=("plymouth-kcm: for KDE settings integration")
+makedepends=("git")
+optdepends=("plymouth-kcm: KDE Plymouth settings integration")
+install="${pkgname}.install"
+
 source=("${pkgname}::git+${url}.git")
-sha256sums=('SKIP')
+sha256sums=("SKIP")
 
 package() {
-  install -d "$pkgdir/usr/share/plymouth/themes"
-  cp -rf "${srcdir}/${pkgname}/eos-bgrt" "${pkgdir}/usr/share/plymouth/themes/eos-bgrt"
-  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -d "${pkgdir}/usr/share/plymouth/themes"
+  cp -r "${srcdir}/${pkgname}/eos-bgrt" \
+        "${pkgdir}/usr/share/plymouth/themes/eos-bgrt"
+
+  install -Dm644 "${srcdir}/${pkgname}/plymouth-wait-for-animation.service" \
+    "${pkgdir}/usr/lib/systemd/system/plymouth-wait-for-animation.service"
+
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
