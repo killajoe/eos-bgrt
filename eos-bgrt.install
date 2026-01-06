@@ -1,0 +1,41 @@
+post_install() {
+    echo "Enabling Plymouth service…"
+    systemctl enable plymouth-wait-for-animation.service
+
+    echo "Setting Plymouth theme…"
+    plymouth-set-default-theme eos-bgrt
+
+    echo "Updating kernel cmdline…"
+    if [ -f /etc/kernel/cmdline ]; then
+        grep -qw "splash" /etc/kernel/cmdline || \
+            sed -i 's/$/ splash quiet plymouth.nolog/' /etc/kernel/cmdline
+    else
+        echo "splash quiet plymouth.nolog" > /etc/kernel/cmdline
+    fi
+
+    echo "Reinstalling kernels…"
+    reinstall-kernels
+}
+
+post_remove() {
+    echo "Removing Plymouth dracut config…"
+    rm -f /etc/dracut.conf.d/plymouth.conf
+
+    echo "Cleaning kernel cmdline…"
+    if [ -f /etc/kernel/cmdline ]; then
+        sed -i \
+          -e 's/\bsplash\b//g' \
+          -e 's/\bquiet\b//g' \
+          -e 's/\bplymouth\.nolog\b//g' \
+          -e 's/  */ /g' \
+          -e 's/^ *//' \
+          -e 's/ *$//' \
+          /etc/kernel/cmdline
+    fi
+
+    echo "Restoring default Plymouth theme…"
+    plymouth-set-default-theme bgrt
+
+    echo "Reinstalling kernels…"
+    reinstall-kernels
+}
