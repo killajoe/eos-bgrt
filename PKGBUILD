@@ -10,11 +10,13 @@ pkgdesc="EndeavourOS BGRT Plymouth bootscreen animation"
 depends=("plymouth")
 makedepends=('git')
 optdepends=("plymouth-kcm: for KDE settings integration")
+install=eos-bgrt.install
 source=("${pkgname}::git+${url}.git")
-sha256sums=("234")
+sha256sums=('123'
+            '456')
 
 package() {
   install -d "$pkgdir/usr/share/plymouth/themes"
   cp -rf "${srcdir}/${pkgname}/eos-bgrt" "${pkgdir}/usr/share/plymouth/themes/eos-bgrt"
-  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
