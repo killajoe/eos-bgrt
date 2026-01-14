@@ -27,9 +27,25 @@ post_remove() {
 _add_cmdline_args() {
     local args="splash quiet plymouth.nolog"
 
-    # systemd-boot
+    # GRUB takes precedence if present
+    if [ -f /etc/default/grub ]; then
+        echo "Detected GRUB"
+
+        for arg in $args; do
+            grep -qw "$arg" /etc/default/grub || \
+                sed -i \
+                    -e "s/^\(GRUB_CMDLINE_LINUX_DEFAULT=\"[^\"]*\)\"/\1 $arg\"/" \
+                    /etc/default/grub
+        done
+
+        grub-mkconfig -o /boot/grub/grub.cfg
+        return
+    fi
+
+    # systemd-boot fallback
     if [ -f /etc/kernel/cmdline ]; then
         echo "Detected systemd-boot"
+
         for arg in $args; do
             grep -qw "$arg" /etc/kernel/cmdline || \
                 sed -i "s/$/ $arg/" /etc/kernel/cmdline
@@ -37,22 +53,23 @@ _add_cmdline_args() {
         return
     fi
 
-    # GRUB
+    echo "WARNING: No supported bootloader configuration found!" >&2
+}
+
+_remove_cmdline_args() {
+    # GRUB first
     if [ -f /etc/default/grub ]; then
-        echo "Detected GRUB"
         sed -i \
-            -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&splash quiet plymouth.nolog /' \
-            /etc/default/grub
+          -e 's/\bsplash\b//g' \
+          -e 's/\bquiet\b//g' \
+          -e 's/\bplymouth\.nolog\b//g' \
+          /etc/default/grub
 
         grub-mkconfig -o /boot/grub/grub.cfg
         return
     fi
 
-    echo "WARNING: No supported bootloader configuration found!" >&2
-}
-
-_remove_cmdline_args() {
-    # systemd-boot
+    # systemd-boot fallback
     if [ -f /etc/kernel/cmdline ]; then
         sed -i \
           -e 's/\bsplash\b//g' \
@@ -62,18 +79,6 @@ _remove_cmdline_args() {
           -e 's/^ *//' \
           -e 's/ *$//' \
           /etc/kernel/cmdline
-        return
-    fi
-
-    # GRUB
-    if [ -f /etc/default/grub ]; then
-        sed -i \
-          -e 's/\bsplash\b//g' \
-          -e 's/\bquiet\b//g' \
-          -e 's/\bplymouth\.nolog\b//g' \
-          /etc/default/grub
-
-        grub-mkconfig -o /boot/grub/grub.cfg
         return
     fi
 }
@@ -87,7 +92,7 @@ rebuild_initramfs() {
         return
     fi
 
-    # systemd-boot kernel reinstall helper
+    # systemd-boot helper
     if command -v reinstall-kernels >/dev/null 2>&1; then
         reinstall-kernels
         return
