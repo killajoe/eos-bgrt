@@ -31,12 +31,24 @@ _add_cmdline_args() {
     if [ -f /etc/default/grub ]; then
         echo "Detected GRUB"
 
+        # Extract current cmdline (supports ' or ")
+        local current
+        current=$(sed -n \
+            -e "s/^GRUB_CMDLINE_LINUX_DEFAULT=['\"]\(.*\)['\"]/\1/p" \
+            /etc/default/grub)
+
+        # Append missing args
         for arg in $args; do
-            grep -qw "$arg" /etc/default/grub || \
-                sed -i \
-                    -e "s/^\(GRUB_CMDLINE_LINUX_DEFAULT=\"[^\"]*\)\"/\1 $arg\"/" \
-                    /etc/default/grub
+            case " $current " in
+                *" $arg "*) ;;
+                *) current="$current $arg" ;;
+            esac
         done
+
+        # Write back using double quotes (GRUB-safe)
+        sed -i \
+            -e "s|^GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT=\"${current}\"|" \
+            /etc/default/grub
 
         grub-mkconfig -o /boot/grub/grub.cfg
         return
@@ -56,32 +68,6 @@ _add_cmdline_args() {
     echo "WARNING: No supported bootloader configuration found!" >&2
 }
 
-_remove_cmdline_args() {
-    # GRUB first
-    if [ -f /etc/default/grub ]; then
-        sed -i \
-          -e 's/\bsplash\b//g' \
-          -e 's/\bquiet\b//g' \
-          -e 's/\bplymouth\.nolog\b//g' \
-          /etc/default/grub
-
-        grub-mkconfig -o /boot/grub/grub.cfg
-        return
-    fi
-
-    # systemd-boot fallback
-    if [ -f /etc/kernel/cmdline ]; then
-        sed -i \
-          -e 's/\bsplash\b//g' \
-          -e 's/\bquiet\b//g' \
-          -e 's/\bplymouth\.nolog\b//g' \
-          -e 's/  */ /g' \
-          -e 's/^ *//' \
-          -e 's/ *$//' \
-          /etc/kernel/cmdline
-        return
-    fi
-}
 
 rebuild_initramfs() {
     echo "Rebuilding initramfs…"
