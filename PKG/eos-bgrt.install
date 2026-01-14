@@ -5,13 +5,8 @@ post_install() {
     echo "Setting Plymouth theme…"
     plymouth-set-default-theme eos-bgrt
 
-    echo "Updating kernel cmdline…"
-    if [ -f /etc/kernel/cmdline ]; then
-        grep -qw "plymouth.nolog" /etc/kernel/cmdline || \
-            sed -i 's/$/ splash quiet plymouth.nolog/' /etc/kernel/cmdline
-    else
-        echo "splash quiet plymouth.nolog" > /etc/kernel/cmdline
-    fi
+    echo "Updating kernel command line…"
+    _add_cmdline_args
 
     rebuild_initramfs
 }
@@ -20,7 +15,44 @@ post_remove() {
     echo "Removing Plymouth dracut config…"
     rm -f /etc/dracut.conf.d/plymouth.conf
 
-    echo "Cleaning kernel cmdline…"
+    echo "Cleaning kernel command line…"
+    _remove_cmdline_args
+
+    echo "Restoring default Plymouth theme…"
+    plymouth-set-default-theme bgrt
+
+    rebuild_initramfs
+}
+
+_add_cmdline_args() {
+    local args="splash quiet plymouth.nolog"
+
+    # systemd-boot
+    if [ -f /etc/kernel/cmdline ]; then
+        echo "Detected systemd-boot"
+        for arg in $args; do
+            grep -qw "$arg" /etc/kernel/cmdline || \
+                sed -i "s/$/ $arg/" /etc/kernel/cmdline
+        done
+        return
+    fi
+
+    # GRUB
+    if [ -f /etc/default/grub ]; then
+        echo "Detected GRUB"
+        sed -i \
+            -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&splash quiet plymouth.nolog /' \
+            /etc/default/grub
+
+        grub-mkconfig -o /boot/grub/grub.cfg
+        return
+    fi
+
+    echo "WARNING: No supported bootloader configuration found!" >&2
+}
+
+_remove_cmdline_args() {
+    # systemd-boot
     if [ -f /etc/kernel/cmdline ]; then
         sed -i \
           -e 's/\bsplash\b//g' \
@@ -30,12 +62,20 @@ post_remove() {
           -e 's/^ *//' \
           -e 's/ *$//' \
           /etc/kernel/cmdline
+        return
     fi
 
-    echo "Restoring default Plymouth theme…"
-    plymouth-set-default-theme bgrt
+    # GRUB
+    if [ -f /etc/default/grub ]; then
+        sed -i \
+          -e 's/\bsplash\b//g' \
+          -e 's/\bquiet\b//g' \
+          -e 's/\bplymouth\.nolog\b//g' \
+          /etc/default/grub
 
-    rebuild_initramfs
+        grub-mkconfig -o /boot/grub/grub.cfg
+        return
+    fi
 }
 
 rebuild_initramfs() {
