@@ -81,16 +81,25 @@ _remove_cmdline_args() {
 rebuild_initramfs() {
     echo "Rebuilding initramfs…"
 
+    # GRUB + dracut (EndeavourOS)
+    if [ -f /etc/default/grub ] && command -v dracut-rebuild >/dev/null 2>&1; then
+        dracut-rebuild
+        return
+    fi
+
+    # systemd-boot kernel reinstall helper
     if command -v reinstall-kernels >/dev/null 2>&1; then
         reinstall-kernels
         return
     fi
 
+    # generic dracut fallback
     if command -v dracut >/dev/null 2>&1; then
         dracut --regenerate-all --force
         return
     fi
 
+    # mkinitcpio fallback
     if command -v mkinitcpio >/dev/null 2>&1; then
         mkinitcpio -P
         return
