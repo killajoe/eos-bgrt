@@ -2,7 +2,9 @@
 EndeavourOS BGRT Plymouth bootscreen animation 
 (supports dracut/mkinitcpio and systemd-boot/Grub)
 
-If using PKG you it will be fully automatic adding all needed settings, and remove them on package removal.
+If using package it will be fully automatic adding all needed settings, and remove them on package removal.
+
+# manually:
 
 1. install plymouth and KDE/plasma settings snippet: `yay -S plymouth plymouth-kcm`
 2. create systemd boot delay service:
