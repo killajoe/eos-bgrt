@@ -53,8 +53,11 @@ WantedBy=plymouth-start.service
    For Grub usage in the grub CMD line at `/etc/default/grub`
 
    GRUB_CMDLINE_LINUX_DEFAULT=` ... splash quiet plymouth.nolog`
+   
 
-7. regenerate images: `sudo reinstall-kernels` (systemd-boot)
+   And regenerate grub.cfg: `sudo grub-mkconfig -o /boot/grub/grub.cfg`
+
+8. regenerate images: `sudo reinstall-kernels` (systemd-boot)
 
       `sudo dracut-rebuild` for grub.
 
