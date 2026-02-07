@@ -65,7 +65,8 @@ WantedBy=plymouth-start.service
 
       `sudo dracut-rebuild` for grub.
 
-9. # revert?
+
+# revert?
 
    
    systemd-boot:
