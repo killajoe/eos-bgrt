@@ -65,28 +65,37 @@ WantedBy=plymouth-start.service
 
       `sudo dracut-rebuild` for grub.
 
-9. revert?
-   systemd-boot:
-     `sudo nano /etc/kernel/cmdline` and remove this 3 options:
+9. # revert?
 
-   `splash quiet plymouth.nolog ...`  
+   
+   systemd-boot:
+   
+   `sudo nano /etc/kernel/cmdline` and remove this 3 options:
+
+   `splash quiet plymouth.nolog ...`
+
    grub:
+   
    `sudo nano /etc/default/grub` and remove the 3 options from CMD line there
 
    GRUB_CMDLINE_LINUX_DEFAULT=` ... splash quiet plymouth.nolog`
 
    to apply regenerate grub.cfg:
+   
    `sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
    remove configs:
    
    `sudo rm /etc/dracut.conf.d/plymouth.conf`
+   
    `sudo rm /etc/systemd/system/plymouth-wait-for-animation.service`
 
    And remove theme files:
+   
    `sudo rm -rf /usr/share/plymouth/themes/eos-bgrt`
 
    regenerate images:
+   
    `sudo reinstall-kernels` (systemd-boot)
 
    `sudo dracut-rebuild` for grub.
