@@ -1,7 +1,7 @@
 # Maintainer: joekamprad <joekamprad [at] endeavouros.com>
 
 pkgname=eos-bgrt
-pkgver=1
+pkgver=3.0
 pkgrel=1
 pkgdesc="EndeavourOS BGRT Plymouth bootscreen animation"
 arch=("any")
