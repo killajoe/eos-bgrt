@@ -15,12 +15,14 @@ post_remove() {
     echo "Removing Plymouth dracut config…"
     rm -f /etc/dracut.conf.d/plymouth.conf
 
-    echo "Cleaning kernel command line…"
-    _remove_cmdline_args
-
     echo "Restoring default Plymouth theme…"
     plymouth-set-default-theme bgrt
 
+    rebuild_initramfs
+}
+
+post_upgrade() {
+    echo "Rebuilding initramfs for updated theme files…"
     rebuild_initramfs
 }
 
