@@ -1,9 +1,7 @@
 # eos-bgrt ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/killajoe/eos-bgrt/total)
 EndeavourOS BGRT Plymouth bootscreen animation 
 
-(supports dracut/mkinitcpio and systemd-boot/Grub)
-
-Now more purple! [25.June 2026]
+* supports dracut/mkinitcpio and systemd-boot/Grub
 
 ![preview gif](https://raw.githubusercontent.com/killajoe/eos-bgrt/refs/heads/main/eos-bgrt.gif)
 
@@ -103,6 +101,9 @@ WantedBy=plymouth-start.service
    regenerate images:
    
    `sudo reinstall-kernels` (systemd-boot)
+
+
+   
 
    `sudo dracut-rebuild` for grub.
    
