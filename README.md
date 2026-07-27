@@ -104,11 +104,10 @@ WantedBy=plymouth-start.service
 
    regenerate images:
    
-   `sudo reinstall-kernels` (systemd-boot)
-
-
-   
+   `sudo reinstall-kernels` (systemd-boot) 
 
    `sudo dracut-rebuild` for grub.
+
+   (On other Distro you will may need sudo mkinitcpio -P)
    
    
