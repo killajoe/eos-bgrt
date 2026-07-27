@@ -70,7 +70,7 @@ WantedBy=plymouth-start.service
 
       `sudo dracut-rebuild` for grub.
 
-(On other Distro you will may need `sudo mkinitcpio -P`)
+(On other Distro you will may need `sudo mkinitcpio -P` )
 
 
 # revert?
@@ -108,6 +108,6 @@ WantedBy=plymouth-start.service
 
    `sudo dracut-rebuild` for grub.
 
-   (On other Distro you will may need sudo mkinitcpio -P)
+   (On other Distro you will may need `sudo mkinitcpio -P`)
    
    
