@@ -8,7 +8,7 @@ EndeavourOS BGRT Plymouth bootscreen animation
 If using [package](https://github.com/killajoe/eos-bgrt/releases) it will be fully automatic adding all needed settings.
 On package removal it will only remove the theme and reset to BGRT default, plymouth setup will stay intact.
 
-**Package is only working for EndeavourOS!** If on other archbased follow manual install # manually:
+**Package is only working for EndeavourOS!** If on other archbased follow manual install [# manually:](https://github.com/killajoe/eos-bgrt/blob/main/README.md#manually)
 
 Download latest package from here: [package](https://github.com/killajoe/eos-bgrt/releases)
 
