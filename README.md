@@ -110,4 +110,10 @@ WantedBy=plymouth-start.service
 
    (On other Distro you will may need `sudo mkinitcpio -P`)
    
-   
+---
+
+# Disclaimer
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+# License
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](https://github.com/killajoe/eos-bgrt/blob/main/LICENSE) file for details.
