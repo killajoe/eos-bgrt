@@ -66,9 +66,11 @@ WantedBy=plymouth-start.service
 
    And regenerate grub.cfg: `sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
-8. regenerate images: `sudo reinstall-kernels` (systemd-boot)
+8. regenerate images (only for EndeavourOS): `sudo reinstall-kernels` (systemd-boot)
 
       `sudo dracut-rebuild` for grub.
+
+(On other Distro you will may need `sudo mkinitcpio -P`)
 
 
 # revert?
