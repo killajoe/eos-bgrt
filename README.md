@@ -3,7 +3,7 @@ EndeavourOS BGRT Plymouth bootscreen animation
 
 * supports dracut/mkinitcpio and systemd-boot/Grub
 
-![preview gif](https://raw.githubusercontent.com/killajoe/eos-bgrt/refs/heads/main/eos-bgrt.gif =300x)
+<img src="https://raw.githubusercontent.com/killajoe/eos-bgrt/refs/heads/main/eos-bgrt.gif" width="300" alt="preview gif">
 
 If using [package](https://github.com/killajoe/eos-bgrt/releases) it will be fully automatic adding all needed settings.
 On package removal it will only remove the theme and reset to BGRT default, plymouth setup will stay intact.
